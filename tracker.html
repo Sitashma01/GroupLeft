@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WildTrail - Live Outdoor Tracker</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="tracker.css" />
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: white;">
+                    <path d="M17 18l-5-5-5 5V3h10z"/>
+                </svg>
+            </div>
+            <div class="logo-text">Wild<span>Trail</span></div>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item active" id="menu-dash">
+                <a href="#dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="9"></rect>
+                        <rect x="14" y="3" width="7" height="5"></rect>
+                        <rect x="14" y="12" width="7" height="9"></rect>
+                        <rect x="3" y="16" width="7" height="5"></rect>
+                    </svg>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item" id="menu-route">
+                <a href="#route-planner" id="btn-open-planner">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    Draw Route
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="index.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Landing Page
+                </a>
+            </li>
+        </ul>
+
+        <div class="user-profile">
+            <div class="avatar">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" alt="Explorer Profile">
+            </div>
+            <div class="user-info">
+                <h4>Alex Ranger</h4>
+                <p>Pro Explorer</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        
+        <!-- Top Navigation Bar -->
+        <header class="topbar">
+            <div class="greeting">
+                <h1 id="dash-title">Outdoor Tracking</h1>
+                <p id="dash-subtitle">Track, plan and simulate your hiking, running, or cycling adventures.</p>
+            </div>
+            
+            <div class="quick-actions">
+                <div class="status-badge">
+                    <div class="status-indicator"></div>
+                    <span id="gps-status">GPS Signal: Ready</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI Statistic Cards -->
+        <section class="stats-grid">
+            <!-- Stat Card 1 -->
+            <div class="stat-card">
+                <div class="stat-icon primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Total Distance</span>
+                    <span class="stat-value" id="kpi-distance">0.00 km</span>
+                </div>
+            </div>
+
+            <!-- Stat Card 2 -->
+            <div class="stat-card">
+                <div class="stat-icon secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Active Time</span>
+                    <span class="stat-value" id="kpi-duration">00:00:00</span>
+                </div>
+            </div>
+
+            <!-- Stat Card 3 -->
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 19V5M5 12l7-7 7 7"/>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Elevation Gain</span>
+                    <span class="stat-value" id="kpi-elevation">0 m</span>
+                </div>
+            </div>
+
+            <!-- Stat Card 4 -->
+            <div class="stat-card">
+                <div class="stat-icon primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Est. Calories</span>
+                    <span class="stat-value" id="kpi-calories">0 kcal</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Panel Section: Interactive Map + Simulation Setup -->
+        <section class="dashboard-panels">
+            <!-- Map Card Panel -->
+            <div class="panel map-card">
+                <!-- Floating Controls over map -->
+                <div class="map-controls">
+                    <button class="map-control-btn active" id="btn-view-follow">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+                        Auto-Center Map
+                    </button>
+                    <button class="map-control-btn" id="btn-draw-mode">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        Draw Custom Route
+                    </button>
+                    <button class="map-control-btn" id="btn-clear-draw" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        Clear Canvas
+                    </button>
+                </div>
+                <div id="map" class="map-container"></div>
+            </div>
+
+            <!-- Controller Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Simulation Control
+                    </h2>
+                </div>
+
+                <div class="sim-controls">
+                    <!-- Trail Selector -->
+                    <div class="trail-selector">
+                        <label for="route-select">Select Adventure Route</label>
+                        <select id="route-select" class="select-input">
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+
+                    <!-- Selected Trail Details -->
+                    <div class="trail-stats">
+                        <div class="trail-substat">
+                            <span class="trail-substat-label">Total Distance</span>
+                            <span class="trail-substat-value" id="detail-dist">0.0 km</span>
+                        </div>
+                        <div class="trail-substat">
+                            <span class="trail-substat-label">Elevation Gain</span>
+                            <span class="trail-substat-value" id="detail-elev">0 m</span>
+                        </div>
+                        <div class="trail-substat">
+                            <span class="trail-substat-label">Difficulty</span>
+                            <span class="trail-substat-value" id="detail-diff">Moderate</span>
+                        </div>
+                        <div class="trail-substat">
+                            <span class="trail-substat-label">Type</span>
+                            <span class="trail-substat-value" id="detail-type">Hiking</span>
+                        </div>
+                    </div>
+
+                    <!-- Simulator Controls -->
+                    <div class="sim-buttons">
+                        <!-- Play/Pause Button -->
+                        <button class="btn btn-primary btn-pulse" id="btn-sim-play">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            Start Simulation
+                        </button>
+                        
+                        <div class="sim-buttons-row">
+                            <!-- Pause Button -->
+                            <button class="btn btn-secondary" id="btn-sim-pause" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                                Pause
+                            </button>
+                            <!-- Stop Button -->
+                            <button class="btn btn-secondary" id="btn-sim-stop" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16"></rect></svg>
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Speed Multiplier -->
+                    <div class="speed-control-container">
+                        <span class="speed-control-label">Simulation Speed</span>
+                        <div class="speed-btns">
+                            <button class="speed-btn active" data-speed="1">1x</button>
+                            <button class="speed-btn" data-speed="2">2x</button>
+                            <button class="speed-btn" data-speed="5">5x</button>
+                            <button class="speed-btn" data-speed="15">15x</button>
+                            <button class="speed-btn" data-speed="40">40x</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Metrics Section: Rolling Graphs/Charts -->
+        <section class="live-dashboard">
+            <!-- Speed Card -->
+            <div class="live-card">
+                <div class="live-card-header">
+                    <span class="live-card-title">Current Speed</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke: var(--primary);"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 10"></polyline></svg>
+                </div>
+                <div class="live-card-value" id="live-speed">0.0 km/h</div>
+                <span class="live-card-desc" id="live-speed-type">Walking pace</span>
+                
+                <!-- Speed History Chart -->
+                <div class="chart-container">
+                    <svg class="chart-svg" id="speed-chart">
+                        <defs>
+                            <linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="var(--primary)" stop-opacity="0.0"/>
+                            </linearGradient>
+                        </defs>
+                        <path class="chart-path-fill" id="speed-chart-fill" d="M 0 120 L 0 120 Z"></path>
+                        <path class="chart-path" id="speed-chart-path" d="M 0 120"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Elevation Profile Card -->
+            <div class="live-card">
+                <div class="live-card-header">
+                    <span class="live-card-title">Elevation Profile</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke: var(--secondary);"><path d="M22 10v6M2 10l10-5 10 5M2 16l10-5 10 5"/></svg>
+                </div>
+                <div class="live-card-value" id="live-elevation">0 m</div>
+                <span class="live-card-desc" id="live-grade">Slope: 0% Grade</span>
+                
+                <!-- Elevation Chart -->
+                <div class="chart-container">
+                    <svg class="chart-svg" id="elevation-chart">
+                        <defs>
+                            <linearGradient id="elev-gradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="var(--secondary)" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="var(--secondary)" stop-opacity="0.0"/>
+                            </linearGradient>
+                        </defs>
+                        <path class="chart-path-fill" id="elev-chart-fill" d="M 0 120 L 0 120 Z"></path>
+                        <path class="chart-path" id="elev-chart-path" d="M 0 120" style="stroke: var(--secondary); filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.4));"></path>
+                        <!-- Vertical line indicating current location -->
+                        <line id="elev-progress-marker" x1="0" y1="0" x2="0" y2="120" stroke="white" stroke-width="1.5" stroke-dasharray="3" style="display: none;"></line>
+                        <circle id="elev-progress-dot" cx="0" cy="120" r="5" fill="var(--secondary)" stroke="white" stroke-width="1.5" style="display: none;"></circle>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Weather Widget -->
+            <div class="live-card">
+                <div class="live-card-header">
+                    <span class="live-card-title">Trail Weather</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke: var(--info);"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                </div>
+                <div class="live-card-value" id="weather-temp">68°F</div>
+                <span class="live-card-desc" id="weather-condition">Partly Cloudy • Humidity: 42%</span>
+
+                <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; color: var(--text-muted);">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Wind speed:</span>
+                        <strong style="color: var(--text-main);" id="weather-wind">6 mph</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>UV Index:</span>
+                        <strong style="color: var(--text-main);" id="weather-uv">Low (2)</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Trail Condition:</span>
+                        <strong style="color: var(--success);" id="trail-safety">Excellent</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Past Workouts / Activity History Log -->
+        <section class="panel activity-log-section">
+            <div class="panel-header">
+                <h2 class="panel-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    Activity History
+                </h2>
+            </div>
+            
+            <div class="table-wrapper">
+                <table class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>Activity / Route</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Distance</th>
+                            <th>Duration</th>
+                            <th>Elevation</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activity-log-body">
+                        <!-- Loaded by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Route Builder Modal -->
+    <div class="route-builder-overlay" id="planner-overlay">
+        <div class="route-builder-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Save Custom Route</h3>
+                <button class="modal-close" id="btn-close-modal">&times;</button>
+            </div>
+            <form id="route-save-form" onsubmit="event.preventDefault();">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="route-name-input">Route Name</label>
+                    <input type="text" id="route-name-input" class="text-input" placeholder="e.g. My Lakeside Trail Run" required>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="route-type-input">Activity Type</label>
+                    <select id="route-type-input" class="select-input">
+                        <option value="Hiking">Hiking</option>
+                        <option value="Running">Running</option>
+                        <option value="Cycling">Cycling</option>
+                    </select>
+                </div>
+
+                <div class="trail-stats" style="margin-bottom: 20px; background-color: rgba(255,255,255,0.02)">
+                    <div class="trail-substat">
+                        <span class="trail-substat-label">Total Points</span>
+                        <span class="trail-substat-value" id="builder-points">0</span>
+                    </div>
+                    <div class="trail-substat">
+                        <span class="trail-substat-label">Total Distance</span>
+                        <span class="trail-substat-value" id="builder-dist">0.00 km</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-route-confirm">Save & Select Route</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Containers -->
+    <div class="toast-container" id="toast-holder"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Tracking Code script -->
+    <script>
+        // --- 1. Coordinate & Route Database ---
+        // Generates Yosemite Valley loop coordinates with coordinates [lat, lng, elevation_in_meters]
+        const YOSEMITE_COORDS = [
+            [37.7420, -119.5300, 1220],
+            [37.7423, -119.5270, 1224],
+            [37.7431, -119.5240, 1235],
+            [37.7445, -119.5210, 1250],
+            [37.7460, -119.5190, 1262],
+            [37.7485, -119.5175, 1285],
+            [37.7505, -119.5180, 1290],
+            [37.7520, -119.5198, 1310],
+            [37.7532, -119.5220, 1324],
+            [37.7538, -119.5245, 1342],
+            [37.7535, -119.5280, 1338],
+            [37.7528, -119.5310, 1315],
+            [37.7512, -119.5335, 1292],
+            [37.7495, -119.5350, 1270],
+            [37.7470, -119.5360, 1255],
+            [37.7450, -119.5358, 1242],
+            [37.7432, -119.5340, 1228],
+            [37.7420, -119.5300, 1220]
+        ];
+
+        // Grand Canyon Bright Angel Trail descent coordinates
+        const GRAND_CANYON_COORDS = [
+            [36.0573, -112.1438, 2080],
+            [36.0578, -112.1448, 2025],
+            [36.0585, -112.1458, 1960],
+            [36.0592, -112.1450, 1890],
+            [36.0601, -112.1442, 1820],
+            [36.0612, -112.1435, 1750],
+            [36.0622, -112.1442, 1690],
+            [36.0628, -112.1458, 1625],
+            [36.0620, -112.1472, 1570],
+            [36.0610, -112.1485, 1510],
+            [36.0600, -112.1498, 1475],
+            [36.0612, -112.1508, 1420],
+            [36.0625, -112.1518, 1380],
+            [36.0640, -112.1528, 1330]
+        ];
+
+        // Seattle Discovery Park loop coordinates
+        const SEATTLE_COORDS = [
+            [47.6582, -122.4180, 85],
+            [47.6595, -122.4200, 70],
+            [47.6608, -122.4225, 45],
+            [47.6615, -122.4250, 22],
+            [47.6610, -122.4280, 8],
+            [47.6590, -122.4290, 6],
+            [47.6570, -122.4285, 10],
+            [47.6552, -122.4268, 30],
+            [47.6540, -122.4242, 55],
+            [47.6538, -122.4215, 78],
+            [47.6545, -122.4190, 92],
+            [47.6562, -122.4180, 88],
+            [47.6582, -122.4180, 85]
+        ];
+
+        // Default routes list
+        let routes = {
+            "yosemite-loop": {
+                id: "yosemite-loop",
+                name: "Yosemite Mirror Lake Trail",
+                type: "Hiking",
+                difficulty: "Moderate",
+                coords: YOSEMITE_COORDS,
+                weather: { temp: "72°F", cond: "Clear sky • Humidity 35%", wind: "4 mph", uv: "Moderate (5)", safety: "Excellent" }
+            },
+            "canyon-bright-angel": {
+                id: "canyon-bright-angel",
+                name: "Bright Angel Trail (GC)",
+                type: "Hiking",
+                difficulty: "Hard",
+                coords: GRAND_CANYON_COORDS,
+                weather: { temp: "89°F", cond: "Hot & Sunny • Humidity 15%", wind: "8 mph", uv: "Very High (9)", safety: "Caution: High Temp" }
+            },
+            "seattle-discovery": {
+                id: "seattle-discovery",
+                name: "Discovery Park Loop",
+                type: "Running",
+                difficulty: "Easy",
+                coords: SEATTLE_COORDS,
+                weather: { temp: "61°F", cond: "Overcast & Cool • Humidity 78%", wind: "12 mph", uv: "Low (2)", safety: "Slippery Trails" }
+            }
+        };
+
+        // --- 2. State Variables ---
+        let map;
+        let activeRouteId = "yosemite-loop";
+        let activeRouteObj = routes[activeRouteId];
+        let simIntervalId = null;
+        let isSimulating = false;
+        let isPaused = false;
+        
+        let simSpeedMultiplier = 1; // 1 tick corresponds to index increment based on this
+        let simCurrentIndex = 0;
+        let simElapsedTime = 0; // in seconds
+        let simDistanceTraveled = 0; // in km
+        let simElevationGained = 0; // in meters
+        let simStartElevation = 0;
+        let simCalories = 0;
+        
+        let speedChartData = [];
+        let speedChartLimit = 15;
+        
+        // Leaflet Markers and Polylines
+        let routeLine = null;
+        let trackedLine = null;
+        let startMarker = null;
+        let endMarker = null;
+        let currentMarker = null;
+        let autocenterMap = true;
+
+        // Custom route drawer states
+        let isDrawMode = false;
+        let drawPoints = [];
+        let drawPolyline = null;
+        let drawMarkers = [];
+
+        // --- 3. DOM Elements ---
+        const routeSelect = document.getElementById("route-select");
+        const btnSimPlay = document.getElementById("btn-sim-play");
+        const btnSimPause = document.getElementById("btn-sim-pause");
+        const btnSimStop = document.getElementById("btn-sim-stop");
+        
+        const kpiDistance = document.getElementById("kpi-distance");
+        const kpiDuration = document.getElementById("kpi-duration");
+        const kpiElevation = document.getElementById("kpi-elevation");
+        const kpiCalories = document.getElementById("kpi-calories");
+
+        const detailDist = document.getElementById("detail-dist");
+        const detailElev = document.getElementById("detail-elev");
+        const detailDiff = document.getElementById("detail-diff");
+        const detailType = document.getElementById("detail-type");
+
+        const liveSpeed = document.getElementById("live-speed");
+        const liveSpeedType = document.getElementById("live-speed-type");
+        const liveElevation = document.getElementById("live-elevation");
+        const liveGrade = document.getElementById("live-grade");
+
+        const weatherTemp = document.getElementById("weather-temp");
+        const weatherCondition = document.getElementById("weather-condition");
+        const weatherWind = document.getElementById("weather-wind");
+        const weatherUv = document.getElementById("weather-uv");
+        const trailSafety = document.getElementById("trail-safety");
+
+        const speedBtnArray = document.querySelectorAll(".speed-btn");
+        const btnViewFollow = document.getElementById("btn-view-follow");
+        const btnDrawMode = document.getElementById("btn-draw-mode");
+        const btnClearDraw = document.getElementById("btn-clear-draw");
+
+        const plannerOverlay = document.getElementById("planner-overlay");
+        const btnCloseModal = document.getElementById("btn-close-modal");
+        const btnCancelModal = document.getElementById("btn-cancel-modal");
+        const routeSaveForm = document.getElementById("route-save-form");
+        const builderPoints = document.getElementById("builder-points");
+        const builderDist = document.getElementById("builder-dist");
+
+        const activityLogBody = document.getElementById("activity-log-body");
+        const toastHolder = document.getElementById("toast-holder");
+
+        // --- 4. Initialize Map ---
+        function initMap() {
+            // CartoDB Dark Matter tile provider fits the glowing emerald aesthetic perfectly
+            map = L.map('map', {
+                center: [37.7420, -119.5300],
+                zoom: 14,
+                zoomControl: true
+            });
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+            }).addTo(map);
+
+            // Add click listener for custom route building
+            map.on('click', handleMapClick);
+        }
+
+        // --- 5. Toast System ---
+        function showToast(message, type = "success") {
+            const toast = document.createElement("div");
+            toast.className = `toast`;
+            if (type === "error") {
+                toast.style.borderLeftColor = "var(--danger)";
+                toast.style.backgroundColor = "#241315";
+            } else if (type === "warning") {
+                toast.style.borderLeftColor = "var(--secondary)";
+                toast.style.backgroundColor = "#241d13";
+            }
+            
+            toast.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="stroke: ${type === 'error' ? 'var(--danger)' : type === 'warning' ? 'var(--secondary)' : 'var(--primary)'};">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 8 12 12 16 14"></polyline>
+                </svg>
+                <span class="toast-message">${message}</span>
+            `;
+            
+            toastHolder.appendChild(toast);
+            
+            // Animation trigger
+            setTimeout(() => toast.classList.add("active"), 10);
+            
+            // Auto destroy
+            setTimeout(() => {
+                toast.classList.remove("active");
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        }
+
+        // --- 6. Load / Build Trails Select ---
+        function populateRouteDropdown() {
+            routeSelect.innerHTML = "";
+            
+            // Load custom routes from LocalStorage
+            const stored = localStorage.getItem("custom_routes");
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    Object.values(parsed).forEach(r => {
+                        routes[r.id] = r;
+                    });
+                } catch(e) { console.error("Could not parse saved custom routes", e); }
+            }
+
+            Object.values(routes).forEach(route => {
+                const opt = document.createElement("option");
+                opt.value = route.id;
+                opt.textContent = route.name + ` (${route.type})`;
+                routeSelect.appendChild(opt);
+            });
+
+            // Set current
+            routeSelect.value = activeRouteId;
+            updateSelectedTrailUI();
+        }
+
+        // --- 7. Distance & Speed Calculations Helper ---
+        // Haversine formula to compute distance in km between two lat/lngs
+        function getDistanceKm(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius of the earth in km
+            const dLat = deg2rad(lat2 - lat1);
+            const dLon = deg2rad(lon2 - lon1);
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const d = R * c; // Distance in km
+            return d;
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI / 180);
+        }
+
+        // Calculates total path distance in km
+        function calculateRouteDistance(coords) {
+            let total = 0;
+            for (let i = 0; i < coords.length - 1; i++) {
+                total += getDistanceKm(coords[i][0], coords[i][1], coords[i+1][0], coords[i+1][1]);
+            }
+            return total;
+        }
+
+        // Calculates elevation gain in meters
+        function calculateRouteElevationGain(coords) {
+            let gain = 0;
+            for (let i = 0; i < coords.length - 1; i++) {
+                const diff = coords[i+1][2] - coords[i][2];
+                if (diff > 0) gain += diff;
+            }
+            return gain;
+        }
+
+        // Format duration seconds to HH:MM:SS
+        function formatDuration(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = Math.floor(seconds % 60);
+            return [
+                h.toString().padStart(2, '0'),
+                m.toString().padStart(2, '0'),
+                s.toString().padStart(2, '0')
+            ].join(':');
+        }
+
+        // --- 8. Draw Selected Route on Map ---
+        function renderSelectedRouteOnMap() {
+            // Remove previous layers
+            if (routeLine) map.removeLayer(routeLine);
+            if (trackedLine) map.removeLayer(trackedLine);
+            if (startMarker) map.removeLayer(startMarker);
+            if (endMarker) map.removeLayer(endMarker);
+            if (currentMarker) map.removeLayer(currentMarker);
+
+            const coords = activeRouteObj.coords;
+            if (coords.length === 0) return;
+
+            // Simple lat/lng mapping for leaflet
+            const latlngs = coords.map(c => [c[0], c[1]]);
+
+            // Planned route dashed line style
+            routeLine = L.polyline(latlngs, {
+                color: 'var(--text-muted)',
+                weight: 4,
+                opacity: 0.4,
+                dashArray: '8, 8',
+                lineCap: 'round'
+            }).addTo(map);
+
+            // Set up green and red markers for start & finish
+            const startPoint = latlngs[0];
+            const endPoint = latlngs[latlngs.length - 1];
+
+            // Custom Leaflet DivIcons to support CSS colors
+            const startIcon = L.divIcon({
+                className: 'custom-map-marker start',
+                html: `<div style="background-color: var(--primary); width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 10px var(--primary);"></div>`,
+                iconSize: [12, 12],
+                iconAnchor: [6, 6]
+            });
+
+            const endIcon = L.divIcon({
+                className: 'custom-map-marker end',
+                html: `<div style="background-color: var(--danger); width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 10px var(--danger);"></div>`,
+                iconSize: [12, 12],
+                iconAnchor: [6, 6]
+            });
+
+            startMarker = L.marker(startPoint, { icon: startIcon }).addTo(map).bindPopup("Start point of trail");
+            
+            if (coords.length > 1) {
+                endMarker = L.marker(endPoint, { icon: endIcon }).addTo(map).bindPopup("Destination");
+            }
+
+            // Path for tracked segment (glowing active track)
+            trackedLine = L.polyline([], {
+                color: 'var(--primary)',
+                weight: 5,
+                opacity: 0.95,
+                lineCap: 'round',
+                lineJoin: 'round'
+            }).addTo(map);
+
+            // Current traveler marker
+            const liveTrackerIcon = L.divIcon({
+                className: 'custom-map-marker tracker-pulse',
+                html: `<div style="background-color: #3b82f6; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 15px #3b82f6; animation: marker-pulse 1.5s infinite;"></div>`,
+                iconSize: [16, 16],
+                iconAnchor: [8, 8]
+            });
+            currentMarker = L.marker(startPoint, { icon: liveTrackerIcon }).addTo(map);
+
+            // CSS Animation inject
+            if (!document.getElementById("pulse-marker-style")) {
+                const styleSheet = document.createElement("style");
+                styleSheet.id = "pulse-marker-style";
+                styleSheet.innerText = `
+                    @keyframes marker-pulse {
+                        0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+                        70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+                        100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+                    }
+                `;
+                document.head.appendChild(styleSheet);
+            }
+
+            // Adjust map view
+            map.fitBounds(routeLine.getBounds(), { padding: [40, 40] });
+        }
+
+        // --- 9. Update UI Sidebar & Weather Widget details ---
+        function updateSelectedTrailUI() {
+            activeRouteObj = routes[activeRouteId];
+            const coords = activeRouteObj.coords;
+            const dist = calculateRouteDistance(coords);
+            const elev = calculateRouteElevationGain(coords);
+
+            detailDist.textContent = `${dist.toFixed(2)} km`;
+            detailElev.textContent = `${elev.toFixed(0)} m`;
+            detailDiff.textContent = activeRouteObj.difficulty;
+            detailType.textContent = activeRouteObj.type;
+
+            // Reset simulation metrics in UI
+            kpiDistance.textContent = "0.00 km";
+            kpiDuration.textContent = "00:00:00";
+            kpiElevation.textContent = "0 m";
+            kpiCalories.textContent = "0 kcal";
+
+            liveSpeed.textContent = "0.0 km/h";
+            liveElevation.textContent = coords.length > 0 ? `${coords[0][2].toFixed(0)} m` : "0 m";
+            liveGrade.textContent = "Slope: 0% Grade";
+
+            // Weather Widget updates
+            const weather = activeRouteObj.weather || { temp: "65°F", cond: "Clear sky", wind: "5 mph", uv: "Low (2)", safety: "Excellent" };
+            weatherTemp.textContent = weather.temp;
+            weatherCondition.textContent = weather.cond;
+            weatherWind.textContent = weather.wind;
+            weatherUv.textContent = weather.uv;
+            trailSafety.textContent = weather.safety;
+
+            if (weather.safety.toLowerCase().includes("caution")) {
+                trailSafety.style.color = "var(--warning)";
+            } else if (weather.safety.toLowerCase().includes("slippery") || weather.safety.toLowerCase().includes("dangerous")) {
+                trailSafety.style.color = "var(--danger)";
+            } else {
+                trailSafety.style.color = "var(--success)";
+            }
+
+            // Draw charts initially with zero values
+            speedChartData = Array(15).fill(0);
+            drawSpeedChart();
+            drawElevationChart();
+
+            renderSelectedRouteOnMap();
+        }
+
+        // --- 10. Live Simulator Logic ---
+        function startSimulation() {
+            if (activeRouteObj.coords.length < 2) {
+                showToast("Please select a route with at least 2 points, or draw one!", "warning");
+                return;
+            }
+
+            isSimulating = true;
+            isPaused = false;
+
+            btnSimPlay.disabled = true;
+            btnSimPause.disabled = false;
+            btnSimStop.disabled = false;
+            
+            // Adjust buttons active styling
+            btnSimPlay.innerHTML = `
+                <div class="status-indicator" style="width:10px; height:10px; margin-right:4px;"></div>
+                Simulating...
+            `;
+            document.getElementById("gps-status").textContent = "GPS Signal: Live Tracking";
+
+            // Reset simulation progress indices if starting from beginning
+            if (simCurrentIndex === 0) {
+                simElapsedTime = 0;
+                simDistanceTraveled = 0;
+                simElevationGained = 0;
+                simStartElevation = activeRouteObj.coords[0][2];
+                simCalories = 0;
+                trackedLine.setLatLngs([]);
+                speedChartData = Array(15).fill(0);
+            }
+
+            const coords = activeRouteObj.coords;
+            showToast(`Started tracking on ${activeRouteObj.name}!`, "success");
+
+            // Timer Tick interval: 250ms
+            const tickRateMs = 250;
+            simIntervalId = setInterval(() => {
+                if (isPaused) return;
+
+                // Move index based on speed multiplier. At 1x we increment indexes slowly
+                const prevIndex = simCurrentIndex;
+                simCurrentIndex += (1 * simSpeedMultiplier * 0.15); // float index interpolation
+                
+                // Cap at length
+                if (simCurrentIndex >= coords.length - 1) {
+                    simCurrentIndex = coords.length - 1;
+                    clearInterval(simIntervalId);
+                    completeSimulation();
+                }
+
+                const currentFloorIndex = Math.floor(simCurrentIndex);
+                const fractionalPart = simCurrentIndex - currentFloorIndex;
+                
+                // Interpolate Coordinates for smooth visual movement
+                let currentLat, currentLng, currentElev;
+                const p1 = coords[currentFloorIndex];
+                const p2 = coords[Math.min(currentFloorIndex + 1, coords.length - 1)];
+
+                if (currentFloorIndex === coords.length - 1) {
+                    currentLat = p1[0];
+                    currentLng = p1[1];
+                    currentElev = p1[2];
+                } else {
+                    currentLat = p1[0] + (p2[0] - p1[0]) * fractionalPart;
+                    currentLng = p1[1] + (p2[1] - p1[1]) * fractionalPart;
+                    currentElev = p1[2] + (p2[2] - p1[2]) * fractionalPart;
+                }
+
+                // Increment stats
+                const dt = (tickRateMs / 1000) * simSpeedMultiplier;
+                simElapsedTime += dt;
+
+                // Distance update: calculate distance from previous visual point
+                let lastLat, lastLng;
+                if (prevIndex === 0) {
+                    lastLat = coords[0][0];
+                    lastLng = coords[0][1];
+                } else {
+                    const prevFloor = Math.floor(prevIndex);
+                    const prevFrac = prevIndex - prevFloor;
+                    const prevP1 = coords[prevFloor];
+                    const prevP2 = coords[Math.min(prevFloor + 1, coords.length - 1)];
+                    lastLat = prevP1[0] + (prevP2[0] - prevP1[0]) * prevFrac;
+                    lastLng = prevP1[1] + (prevP2[1] - prevP1[1]) * prevFrac;
+                }
+
+                const segmentDist = getDistanceKm(lastLat, lastLng, currentLat, currentLng);
+                simDistanceTraveled += segmentDist;
+
+                // Elevation gain calculation
+                const elevDiff = currentElev - coords[Math.floor(prevIndex)][2];
+                if (elevDiff > 0) {
+                    simElevationGained += elevDiff;
+                }
+
+                // Dynamic Speed estimation (km/h) based on segment
+                let baseSpeed = 4.5; // default walking 4.5 km/h
+                if (activeRouteObj.type === "Running") baseSpeed = 10.5;
+                if (activeRouteObj.type === "Cycling") baseSpeed = 22.0;
+
+                // Adjust speed based on slope (climbing slows you down, descending speeds you up slightly)
+                let slopePercent = 0;
+                if (segmentDist > 0) {
+                    slopePercent = ((currentElev - coords[Math.floor(prevIndex)][2]) / (segmentDist * 1000)) * 100;
+                    if (slopePercent > 2) {
+                        baseSpeed = Math.max(baseSpeed * 0.4, baseSpeed - slopePercent * 0.6); // slow down
+                    } else if (slopePercent < -2) {
+                        baseSpeed = Math.min(baseSpeed * 1.3, baseSpeed + Math.abs(slopePercent) * 0.2); // speed up
+                    }
+                }
+                
+                // Add noise to speed for biological realism
+                const noise = (Math.random() - 0.5) * (baseSpeed * 0.1);
+                const currentCalculatedSpeed = Math.max(1.2, baseSpeed + noise);
+
+                // Calories Burned (MET values estimate)
+                let met = 3.5; // moderate hiking
+                if (activeRouteObj.type === "Running") met = 9.8;
+                if (activeRouteObj.type === "Cycling") met = 7.5;
+                // Calories = MET * Weight(kg) * Time(hours). Let's assume average weight of 75kg
+                const addedCal = met * 75 * (dt / 3600);
+                simCalories += addedCal;
+
+                // Push speed data to chart history
+                speedChartData.push(currentCalculatedSpeed);
+                if (speedChartData.length > speedChartLimit) {
+                    speedChartData.shift();
+                }
+
+                // --- Update UI ---
+                kpiDistance.textContent = `${simDistanceTraveled.toFixed(2)} km`;
+                kpiDuration.textContent = formatDuration(simElapsedTime);
+                kpiElevation.textContent = `${simElevationGained.toFixed(0)} m`;
+                kpiCalories.textContent = `${Math.floor(simCalories)} kcal`;
+
+                liveSpeed.textContent = `${currentCalculatedSpeed.toFixed(1)} km/h`;
+                
+                if (activeRouteObj.type === "Running") {
+                    liveSpeedType.textContent = currentCalculatedSpeed > 8 ? "Running Pace" : "Jogging Pace";
+                } else if (activeRouteObj.type === "Cycling") {
+                    liveSpeedType.textContent = "Cycling Speed";
+                } else {
+                    liveSpeedType.textContent = currentCalculatedSpeed > 5 ? "Fast Walking" : "Walking Pace";
+                }
+
+                liveElevation.textContent = `${currentElev.toFixed(0)} m`;
+                liveGrade.textContent = `Slope: ${slopePercent.toFixed(1)}% Grade`;
+
+                // Update Map markers
+                currentMarker.setLatLng([currentLat, currentLng]);
+                
+                // Add point to tracked polyline path
+                trackedLine.addLatLng([currentLat, currentLng]);
+
+                // Map Auto-center mode
+                if (autocenterMap) {
+                    map.panTo([currentLat, currentLng]);
+                }
+
+                // Render dynamic charts
+                drawSpeedChart();
+                updateElevationMarker(currentFloorIndex);
+
+            }, tickRateMs);
+        }
+
+        function pauseSimulation() {
+            if (!isSimulating) return;
+            isPaused = !isPaused;
+
+            if (isPaused) {
+                btnSimPause.textContent = "Resume";
+                btnSimPause.style.backgroundColor = "var(--primary-glow)";
+                btnSimPause.style.color = "var(--primary)";
+                showToast("Simulation Paused", "warning");
+                document.getElementById("gps-status").textContent = "GPS Signal: Paused";
+            } else {
+                btnSimPause.textContent = "Pause";
+                btnSimPause.style.backgroundColor = "rgba(255, 255, 255, 0.05)";
+                btnSimPause.style.color = "var(--text-main)";
+                showToast("Simulation Resumed", "success");
+                document.getElementById("gps-status").textContent = "GPS Signal: Live Tracking";
+            }
+        }
+
+        function stopSimulation() {
+            if (simIntervalId) {
+                clearInterval(simIntervalId);
+            }
+            
+            isSimulating = false;
+            isPaused = false;
+            simCurrentIndex = 0;
+            
+            btnSimPlay.disabled = false;
+            btnSimPlay.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Start Simulation
+            `;
+            btnSimPause.disabled = true;
+            btnSimPause.textContent = "Pause";
+            btnSimPause.style.backgroundColor = "rgba(255, 255, 255, 0.05)";
+            btnSimPause.style.color = "var(--text-main)";
+            btnSimStop.disabled = true;
+
+            document.getElementById("gps-status").textContent = "GPS Signal: Ready";
+            showToast("Simulation Reset", "info");
+
+            updateSelectedTrailUI();
+        }
+
+        function completeSimulation() {
+            isSimulating = false;
+            isPaused = false;
+
+            btnSimPlay.disabled = false;
+            btnSimPlay.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Restart Simulation
+            `;
+            btnSimPause.disabled = true;
+            btnSimStop.disabled = true;
+            document.getElementById("gps-status").textContent = "GPS Signal: Completed";
+            
+            showToast(`Congratulations! You completed ${activeRouteObj.name}!`, "success");
+
+            // Prompt user to save activity
+            setTimeout(() => {
+                const saveWorkout = confirm(`Trail Completed!\n\nWorkout Summary:\nRoute: ${activeRouteObj.name}\nDistance: ${simDistanceTraveled.toFixed(2)} km\nTime: ${formatDuration(simElapsedTime)}\nElevation Gain: ${simElevationGained.toFixed(0)} m\nCalories: ${Math.floor(simCalories)} kcal\n\nDo you want to save this to your Activity Log?`);
+                if (saveWorkout) {
+                    saveActivityToHistory(activeRouteObj.name, activeRouteObj.type, simDistanceTraveled, simElapsedTime, simElevationGained);
+                }
+            }, 300);
+        }
+
+        // --- 11. Custom SVG Charts drawing ---
+        function drawSpeedChart() {
+            const svg = document.getElementById("speed-chart");
+            const path = document.getElementById("speed-chart-path");
+            const fill = document.getElementById("speed-chart-fill");
+            
+            const w = svg.clientWidth || 240;
+            const h = 120;
+
+            if (speedChartData.length === 0) return;
+
+            // Find Max speed for scale
+            let maxSpeed = Math.max(...speedChartData, 8); // Minimum scaling ceiling is 8 km/h
+
+            // Create SVG path string
+            let points = [];
+            const stepX = w / (speedChartLimit - 1);
+            
+            for (let i = 0; i < speedChartData.length; i++) {
+                const x = i * stepX;
+                // inverted y coordinates (SVG coordinate space 0 is top)
+                const y = h - (speedChartData[i] / maxSpeed) * (h - 20) - 10;
+                points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+            }
+
+            const pathString = "M " + points.join(" L ");
+            path.setAttribute("d", pathString);
+
+            // Draw filled area under path
+            const fillString = `${pathString} L ${(points.length - 1) * stepX},${h} L 0,${h} Z`;
+            fill.setAttribute("d", fillString);
+        }
+
+        function drawElevationChart() {
+            const svg = document.getElementById("elevation-chart");
+            const path = document.getElementById("elev-chart-path");
+            const fill = document.getElementById("elev-chart-fill");
+            
+            const w = svg.clientWidth || 240;
+            const h = 120;
+
+            const coords = activeRouteObj.coords;
+            if (coords.length === 0) return;
+
+            // Extract elevation array
+            const elevations = coords.map(c => c[2]);
+            const maxEl = Math.max(...elevations);
+            const minEl = Math.min(...elevations);
+            const elDiff = maxEl - minEl === 0 ? 100 : maxEl - minEl;
+
+            let points = [];
+            const stepX = w / (coords.length - 1);
+
+            for (let i = 0; i < coords.length; i++) {
+                const x = i * stepX;
+                // Scale elevation value into 10 - 110 px range
+                const y = h - ((elevations[i] - minEl) / elDiff) * (h - 30) - 15;
+                points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+            }
+
+            const pathString = "M " + points.join(" L ");
+            path.setAttribute("d", pathString);
+
+            const fillString = `${pathString} L ${(points.length - 1) * stepX},${h} L 0,${h} Z`;
+            fill.setAttribute("d", fillString);
+
+            // Hide indicator dot initially
+            document.getElementById("elev-progress-marker").style.display = "none";
+            document.getElementById("elev-progress-dot").style.display = "none";
+        }
+
+        function updateElevationMarker(index) {
+            const svg = document.getElementById("elevation-chart");
+            const marker = document.getElementById("elev-progress-marker");
+            const dot = document.getElementById("elev-progress-dot");
+            
+            const w = svg.clientWidth || 240;
+            const h = 120;
+
+            const coords = activeRouteObj.coords;
+            if (coords.length === 0 || index >= coords.length) return;
+
+            const stepX = w / (coords.length - 1);
+            const x = index * stepX;
+
+            const elevations = coords.map(c => c[2]);
+            const maxEl = Math.max(...elevations);
+            const minEl = Math.min(...elevations);
+            const elDiff = maxEl - minEl === 0 ? 100 : maxEl - minEl;
+            
+            const y = h - ((elevations[index] - minEl) / elDiff) * (h - 30) - 15;
+
+            marker.setAttribute("x1", x);
+            marker.setAttribute("x2", x);
+            marker.style.display = "block";
+
+            dot.setAttribute("cx", x);
+            dot.setAttribute("cy", y);
+            dot.style.display = "block";
+        }
+
+        // --- 12. Drawing Custom Routes ---
+        function toggleDrawMode() {
+            isDrawMode = !isDrawMode;
+            
+            if (isDrawMode) {
+                // Terminate any running simulation
+                stopSimulation();
+
+                btnDrawMode.classList.add("active");
+                btnDrawMode.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    Finish & Save Route
+                `;
+                btnClearDraw.style.display = "block";
+                document.getElementById("gps-status").textContent = "GPS Signal: Drawing Mode";
+                
+                showToast("Drawing Mode active! Click on map to add waypoints.", "warning");
+                
+                // Clear any previous layers
+                if (routeLine) map.removeLayer(routeLine);
+                if (trackedLine) map.removeLayer(trackedLine);
+                if (startMarker) map.removeLayer(startMarker);
+                if (endMarker) map.removeLayer(endMarker);
+                if (currentMarker) map.removeLayer(currentMarker);
+
+                // Setup drawing variables
+                drawPoints = [];
+                drawMarkers = [];
+                if (drawPolyline) map.removeLayer(drawPolyline);
+                drawPolyline = L.polyline([], {
+                    color: '#f59e0b', // Amber yellow for custom path drawing
+                    weight: 4,
+                    opacity: 0.8,
+                    lineCap: 'round'
+                }).addTo(map);
+            } else {
+                if (drawPoints.length < 2) {
+                    showToast("Draw at least 2 points before saving!", "error");
+                    isDrawMode = true; // Stay in draw mode
+                    return;
+                }
+                
+                // Open Route Planner Save Dialog Modal
+                builderPoints.textContent = drawPoints.length;
+                const d = calculateRouteDistance(drawPoints);
+                builderDist.textContent = `${d.toFixed(2)} km`;
+                
+                plannerOverlay.classList.add("active");
+            }
+        }
+
+        function handleMapClick(e) {
+            if (!isDrawMode) return;
+
+            const lat = e.latlng.lat;
+            const lng = e.latlng.lng;
+            
+            // For elevation, generate a pseudo-random walking height (between 100m and 350m) 
+            // but keep it somewhat continuous based on previous point
+            let elev = 150; 
+            if (drawPoints.length > 0) {
+                const prevElev = drawPoints[drawPoints.length - 1][2];
+                elev = prevElev + (Math.random() - 0.5) * 35; // walk elevation naturally
+                elev = Math.max(10, elev);
+            } else {
+                elev = 120 + Math.floor(Math.random() * 80);
+            }
+
+            drawPoints.push([lat, lng, elev]);
+            drawPolyline.addLatLng([lat, lng]);
+
+            // Add visual dot marker at point
+            const markerColor = drawPoints.length === 1 ? 'var(--primary)' : 'rgba(255, 255, 255, 0.8)';
+            const pointDot = L.divIcon({
+                className: 'custom-draw-point',
+                html: `<div style="background-color: ${markerColor}; width: 8px; height: 8px; border-radius: 50%; border: 1px solid #000;"></div>`,
+                iconSize: [8, 8],
+                iconAnchor: [4, 4]
+            });
+            const m = L.marker([lat, lng], { icon: pointDot }).addTo(map);
+            drawMarkers.push(m);
+        }
+
+        function clearDrawingCanvas() {
+            drawPoints = [];
+            if (drawPolyline) map.removeLayer(drawPolyline);
+            drawMarkers.forEach(m => map.removeLayer(m));
+            drawMarkers = [];
+            
+            drawPolyline = L.polyline([], {
+                color: '#f59e0b',
+                weight: 4,
+                opacity: 0.8
+            }).addTo(map);
+
+            showToast("Cleared drawn route points", "info");
+        }
+
+        function saveCustomRoute() {
+            const name = document.getElementById("route-name-input").value.trim();
+            const type = document.getElementById("route-type-input").value;
+            
+            if (!name) return;
+
+            const id = "custom-" + Date.now();
+            const dist = calculateRouteDistance(drawPoints);
+            const difficulty = dist > 6 ? "Hard" : dist > 3 ? "Moderate" : "Easy";
+            
+            // Build trail mock weather
+            const weatherMock = {
+                temp: "66°F",
+                cond: "Clear Skies • Fresh Air",
+                wind: "5 mph",
+                uv: "Low (3)",
+                safety: "Excellent"
+            };
+
+            const newRoute = {
+                id: id,
+                name: name,
+                type: type,
+                difficulty: difficulty,
+                coords: drawPoints,
+                weather: weatherMock
+            };
+
+            // Store to global variable list
+            routes[id] = newRoute;
+
+            // Persist to LocalStorage
+            const stored = localStorage.getItem("custom_routes");
+            let storedObj = {};
+            if (stored) {
+                try { storedObj = JSON.parse(stored); } catch(e) {}
+            }
+            storedObj[id] = newRoute;
+            localStorage.setItem("custom_routes", JSON.stringify(storedObj));
+
+            // Clean Draw layers
+            if (drawPolyline) map.removeLayer(drawPolyline);
+            drawMarkers.forEach(m => map.removeLayer(m));
+            drawMarkers = [];
+
+            // Reset Drawing UI States
+            isDrawMode = false;
+            btnDrawMode.classList.remove("active");
+            btnDrawMode.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                Draw Custom Route
+            `;
+            btnClearDraw.style.display = "none";
+            plannerOverlay.classList.remove("active");
+            
+            // Populating Select Dropdown & Activate
+            activeRouteId = id;
+            populateRouteDropdown();
+            
+            showToast(`Custom route "${name}" saved!`, "success");
+        }
+
+        // --- 13. Activity History Log System ---
+        function loadActivityHistory() {
+            const listBody = document.getElementById("activity-log-body");
+            listBody.innerHTML = "";
+
+            // Seed initial mock history if local history is empty
+            let history = localStorage.getItem("trail_activity_history");
+            if (!history) {
+                const initialSeed = [
+                    { name: "Yosemite Valley Run", date: "Jun 28, 2026", type: "Running", distance: 4.8, duration: 1820, elevation: 120 },
+                    { name: "Grand Canyon Explorer", date: "Jun 24, 2026", type: "Hiking", distance: 5.2, duration: 5200, elevation: 580 },
+                    { name: "Discovery Coastal Cycle", date: "Jun 20, 2026", type: "Cycling", distance: 12.5, duration: 2450, elevation: 85 }
+                ];
+                localStorage.setItem("trail_activity_history", JSON.stringify(initialSeed));
+                history = JSON.stringify(initialSeed);
+            }
+
+            try {
+                const parsed = JSON.parse(history);
+                // Sort by date/timestamp: latest first (since we only saved array, we render array order)
+                // Let's render backwards so new saves are at top
+                for (let i = parsed.length - 1; i >= 0; i--) {
+                    const act = parsed[i];
+                    
+                    const tr = document.createElement("tr");
+                    
+                    const badgeClass = act.type.toLowerCase() === "hiking" ? "badge-hike" : act.type.toLowerCase() === "running" ? "badge-run" : "badge-ride";
+                    const durationStr = formatDuration(act.duration);
+
+                    tr.innerHTML = `
+                        <td><strong style="color:var(--text-main); font-weight:600;">${act.name}</strong></td>
+                        <td style="color:var(--text-muted); font-size:0.85rem;">${act.date}</td>
+                        <td><span class="activity-type-badge ${badgeClass}">${act.type}</span></td>
+                        <td>${act.distance.toFixed(2)} km</td>
+                        <td>${durationStr}</td>
+                        <td>+${act.elevation.toFixed(0)} m</td>
+                        <td>
+                            <button class="badge-view-btn" onclick="showToast('Replaying activity profile logs on map...', 'info')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                View
+                            </button>
+                        </td>
+                    `;
+                    listBody.appendChild(tr);
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        function saveActivityToHistory(name, type, distance, duration, elevation) {
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            
+            const newAct = {
+                name: name,
+                date: dateStr,
+                type: type,
+                distance: parseFloat(distance),
+                duration: Math.round(duration),
+                elevation: Math.round(elevation)
+            };
+
+            let history = localStorage.getItem("trail_activity_history");
+            let historyArr = [];
+            if (history) {
+                try { historyArr = JSON.parse(history); } catch(e) {}
+            }
+            
+            historyArr.push(newAct);
+            localStorage.setItem("trail_activity_history", JSON.stringify(historyArr));
+
+            // Reload table
+            loadActivityHistory();
+            showToast("Saved workout to history!", "success");
+        }
+
+        // --- 14. Event Listeners ---
+        function registerEventListeners() {
+            // Select trail route
+            routeSelect.addEventListener("change", (e) => {
+                activeRouteId = e.target.value;
+                stopSimulation();
+            });
+
+            // Play/Pause button
+            btnSimPlay.addEventListener("click", () => {
+                if (!isSimulating) {
+                    startSimulation();
+                }
+            });
+
+            btnSimPause.addEventListener("click", () => {
+                pauseSimulation();
+            });
+
+            btnSimStop.addEventListener("click", () => {
+                stopSimulation();
+            });
+
+            // Speed Control Selector buttons
+            speedBtnArray.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    speedBtnArray.forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    
+                    simSpeedMultiplier = parseInt(btn.getAttribute("data-speed"));
+                    showToast(`Simulation speed set to ${simSpeedMultiplier}x`, "info");
+                });
+            });
+
+            // Map follow mode
+            btnViewFollow.addEventListener("click", () => {
+                autocenterMap = !autocenterMap;
+                btnViewFollow.classList.toggle("active", autocenterMap);
+                showToast(autocenterMap ? "Map auto-centering enabled" : "Map auto-centering disabled", "info");
+            });
+
+            // Route drawer click
+            btnDrawMode.addEventListener("click", toggleDrawMode);
+            btnClearDraw.addEventListener("click", clearDrawingCanvas);
+
+            // Modal closes
+            btnCloseModal.addEventListener("click", () => plannerOverlay.classList.remove("active"));
+            btnCancelModal.addEventListener("click", () => plannerOverlay.classList.remove("active"));
+            
+            // Route Form Confirm Submit
+            routeSaveForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                saveCustomRoute();
+            });
+        }
+
+        // --- 15. App Entrypoint ---
+        window.addEventListener("DOMContentLoaded", () => {
+            initMap();
+            populateRouteDropdown();
+            loadActivityHistory();
+            registerEventListeners();
+        });
+    </script>
+</body>
+</html>
