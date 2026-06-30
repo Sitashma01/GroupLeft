@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WildTrail Adventures | Travel Stories & Blogs</title>
+
+    <style>
+      :root {
+        --primary: #1f5f4a;
+        --secondary: #e5a94d;
+        --dark: #17342b;
+        --light: #f4f8f6;
+        --white: #ffffff;
+        --text: #33443e;
+        --muted: #6d7b76;
+        --border: #e2e9e5;
+        --shadow: 0 14px 35px rgba(21, 56, 44, 0.14);
+        --radius: 18px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--text);
+        background: var(--white);
+        line-height: 1.6;
+      }
+
+      img {
+        width: 100%;
+        display: block;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      .container {
+        width: min(1120px, 90%);
+        margin: auto;
+      }
+
+      .section {
+        padding: 90px 0;
+      }
+
+      .section-title {
+        max-width: 680px;
+        margin: 0 auto 50px;
+        text-align: center;
+      }
+
+      .section-title span {
+        color: var(--secondary);
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      .section-title h2 {
+        margin-top: 8px;
+        font-size: clamp(2rem, 4vw, 3rem);
+        color: var(--dark);
+      }
+
+      .section-title p {
+        margin-top: 15px;
+        color: var(--muted);
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 14px 26px;
+        border-radius: 50px;
+        font-weight: 700;
+        transition: 0.3s ease;
+        border: 2px solid transparent;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        color: var(--white);
+        background: var(--secondary);
+      }
+
+      .btn-primary:hover {
+        background: #cf9138;
+        transform: translateY(-3px);
+      }
+
+      .btn-outline {
+        color: var(--white);
+        border-color: var(--white);
+      }
+
+      .btn-outline:hover {
+        color: var(--dark);
+        background: var(--white);
+        transform: translateY(-3px);
+      }
+
+      /* Header */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: rgba(15, 47, 38, 0.88);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 2px 18px rgba(5, 20, 15, 0.08);
+      }
+
+      header.scrolled {
+        background: rgba(15, 47, 38, 0.97);
+      }
+
+      nav {
+        min-height: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo {
+        color: var(--white);
+        font-size: 1.45rem;
+        font-weight: 800;
+      }
+
+      .logo span {
+        color: var(--secondary);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+      }
+
+      .nav-links a {
+        color: var(--white);
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: 0.3s;
+        position: relative;
+      }
+
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--secondary);
+      }
+
+      .menu-button {
+        display: none;
+        border: none;
+        background: transparent;
+        color: var(--white);
+        font-size: 1.8rem;
+        cursor: pointer;
+      }
+
+      /* Blog hero */
+      .blogs-hero {
+        padding: 90px 0 70px;
+        background:
+          linear-gradient(rgba(9, 38, 29, 0.58), rgba(9, 38, 29, 0.66)),
+          url("https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=1800&q=85")
+            center / cover no-repeat;
+      }
+
+      .hero-inner {
+        display: grid;
+        align-items: center;
+        min-height: 470px;
+      }
+
+      .hero-content {
+        max-width: 700px;
+      }
+
+      .hero-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 30px;
+        background: rgba(255, 255, 255, 0.12);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-size: 0.76rem;
+        font-weight: 700;
+        color: #f8f5ef;
+      }
+
+      .hero-content h1 {
+        margin: 18px 0 18px;
+        font-size: clamp(3rem, 7vw, 4.8rem);
+        line-height: 1.05;
+        color: var(--white);
+      }
+
+      .hero-content h1 span {
+        color: var(--secondary);
+      }
+
+      .hero-content p {
+        font-size: 1.08rem;
+        color: #e8efea;
+        max-width: 620px;
+      }
+
+      .hero-search {
+        display: flex;
+        gap: 12px;
+        margin-top: 28px;
+        background: rgba(255, 255, 255, 0.16);
+        padding: 10px;
+        border-radius: 18px;
+        width: min(580px, 100%);
+      }
+
+      .hero-search input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        color: var(--white);
+        padding: 10px 14px;
+        outline: none;
+      }
+
+      .hero-search input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .hero-search button {
+        background: var(--secondary);
+        border: none;
+        color: var(--white);
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .hero-search button:hover {
+        background: #d0923c;
+      }
+
+      /* Featured */
+      .featured-section {
+        background: linear-gradient(180deg, #f8fbfa 0%, #f2f7f4 100%);
+      }
+
+      .featured-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 28px;
+      }
+
+      .featured-card,
+      .blog-card,
+      .destination-card,
+      .newsletter-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .featured-card {
+        transition: 0.35s ease;
+      }
+
+      .featured-card:hover,
+      .blog-card:hover,
+      .destination-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .featured-image {
+        height: 240px;
+        overflow: hidden;
+      }
+
+      .featured-image img {
+        height: 100%;
+        object-fit: cover;
+        transition: 0.45s ease;
+      }
+
+      .featured-card:hover .featured-image img,
+      .blog-card:hover .blog-image img {
+        transform: scale(1.08);
+      }
+
+      .featured-body {
+        padding: 24px;
+      }
+
+      .featured-meta,
+      .blog-meta,
+      .card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .feature-badge,
+      .blog-badge {
+        display: inline-flex;
+        padding: 7px 12px;
+        border-radius: 30px;
+        background: #f6ead5;
+        color: #9c6f2f;
+        font-weight: 700;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .featured-date,
+      .blog-read {
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .featured-title,
+      .blog-title {
+        margin: 14px 0 12px;
+        font-size: 1.55rem;
+        line-height: 1.2;
+        color: var(--dark);
+      }
+
+      .featured-excerpt,
+      .blog-description {
+        color: var(--muted);
+      }
+
+      .featured-author {
+        margin-top: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-top: 14px;
+        border-top: 1px solid #edf1ef;
+      }
+
+      .author-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .author-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .author-name {
+        font-weight: 700;
+        color: var(--dark);
+        font-size: 0.93rem;
+      }
+
+      .author-role {
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+
+      .featured-button,
+      .blog-button {
+        margin-top: 18px;
+        padding: 12px 18px;
+        border: none;
+        border-radius: 12px;
+        background: #edf3ef;
+        color: var(--primary);
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .featured-button:hover,
+      .blog-button:hover,
+      .read-more:hover {
+        background: #deeee5;
+      }
+
+      /* Categories */
+      .categories-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+      }
+
+      .category-btn {
+        padding: 12px 18px;
+        border-radius: 50px;
+        border: 1px solid #d8e3de;
+        background: #f8fbfa;
+        color: var(--dark);
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .category-btn:hover,
+      .category-btn.active {
+        background: var(--primary);
+        color: var(--white);
+        border-color: transparent;
+      }
+
+      /* Main blog layout */
+      .blog-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 40px;
+        align-items: start;
+      }
+
+      .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 26px;
+      }
+
+      .blog-card {
+        transition: 0.35s ease;
+      }
+
+      .blog-image {
+        height: 200px;
+        overflow: hidden;
+      }
+
+      .blog-image img {
+        height: 100%;
+        object-fit: cover;
+        transition: 0.45s ease;
+      }
+
+      .blog-content {
+        padding: 22px;
+      }
+
+      .blog-title {
+        font-size: 1.35rem;
+        margin: 14px 0 10px;
+      }
+
+      .blog-description {
+        font-size: 0.95rem;
+      }
+
+      .blog-footer {
+        margin-top: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .blog-date {
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+
+      .blog-button {
+        padding: 10px 16px;
+        margin-top: 0;
+      }
+
+      .blog-card.hidden {
+        display: none;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 110px;
+      }
+
+      .trending-box {
+        border-radius: var(--radius);
+        background: linear-gradient(180deg, #f8fbfa 0%, #ffffff 100%);
+        padding: 26px;
+        box-shadow: var(--shadow);
+      }
+
+      .trending-box h3 {
+        margin-bottom: 18px;
+        color: var(--dark);
+        font-size: 1.45rem;
+      }
+
+      .destination-card {
+        display: flex;
+        gap: 14px;
+        padding: 14px;
+        margin-bottom: 14px;
+        align-items: center;
+      }
+
+      .destination-card:last-child {
+        margin-bottom: 0;
+      }
+
+      .destination-card img {
+        width: 90px;
+        height: 75px;
+        object-fit: cover;
+        border-radius: 12px;
+      }
+
+      .destination-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .destination-info span {
+        color: #7d8f87;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .destination-info strong {
+        font-size: 0.98rem;
+      }
+
+      /* Newsletter */
+      .newsletter {
+        padding: 80px 0;
+        background: linear-gradient(180deg, #f2f7f4 0%, #e9f1ed 100%);
+      }
+
+      .newsletter-card {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 30px;
+        padding: 40px;
+        align-items: center;
+        background:
+          linear-gradient(rgba(24, 72, 56, 0.72), rgba(24, 72, 56, 0.72)),
+          url("https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?auto=format&fit=crop&w=1200&q=80")
+            center / cover no-repeat;
+        color: var(--white);
+      }
+
+      .newsletter-card h2 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        margin-bottom: 12px;
+      }
+
+      .newsletter-card p {
+        color: #dbe8e1;
+      }
+
+      .newsletter-form {
+        display: grid;
+        gap: 14px;
+      }
+
+      .newsletter-form input {
+        padding: 16px;
+        border-radius: 14px;
+        border: none;
+        outline: none;
+      }
+
+      .newsletter-form button {
+        padding: 16px;
+        border-radius: 14px;
+        border: none;
+        background: var(--secondary);
+        color: var(--white);
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .newsletter-form button:hover {
+        background: #d0923c;
+      }
+
+      .newsletter-message {
+        min-height: 24px;
+        font-weight: 600;
+      }
+
+      .newsletter-message.error {
+        color: #ffe4e6;
+      }
+
+      .newsletter-message.success {
+        color: #c8f2dd;
+      }
+
+      /* Footer */
+      footer {
+        padding: 56px 0 24px;
+        background: #10271f;
+        color: #d6e0dc;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr 1fr;
+        gap: 34px;
+      }
+
+      .footer-brand p {
+        margin-top: 16px;
+        max-width: 260px;
+      }
+
+      .footer-title {
+        margin-bottom: 18px;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--white);
+      }
+
+      .footer-links li,
+      .footer-contact li {
+        margin-bottom: 12px;
+      }
+
+      .footer-links a:hover {
+        color: var(--secondary);
+      }
+
+      .socials {
+        display: flex;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .socials a {
+        width: 42px;
+        height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--white);
+        font-weight: 700;
+      }
+
+      .socials a:hover {
+        background: var(--secondary);
+      }
+
+      .footer-bottom {
+        margin-top: 36px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+      }
+
+      /* Scroll to top */
+      .scroll-top {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        width: 56px;
+        height: 56px;
+        border: none;
+        border-radius: 50%;
+        background: var(--secondary);
+        color: var(--white);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        transition: 0.3s ease;
+        z-index: 900;
+      }
+
+      .scroll-top.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .scroll-top:hover {
+        background: #d0923c;
+      }
+
+      /* Modal */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(12, 35, 28, 0.72);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        z-index: 1200;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+      }
+
+      .modal {
+        width: min(640px, 100%);
+        background: var(--white);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(10, 30, 23, 0.35);
+      }
+
+      .modal-image {
+        height: 280px;
+      }
+
+      .modal-image img {
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .modal-content {
+        padding: 28px;
+      }
+
+      .modal-close {
+        float: right;
+        border: none;
+        background: transparent;
+        font-size: 2rem;
+        line-height: 1;
+        cursor: pointer;
+        color: var(--dark);
+      }
+
+      .modal-content h3 {
+        margin-top: 4px;
+        color: var(--dark);
+        font-size: 2rem;
+      }
+
+      .modal-desc {
+        margin: 16px 0;
+        color: var(--muted);
+      }
+
+      .modal-read-time {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      /* Reveal animation */
+      .reveal {
+        opacity: 0;
+        transform: translateY(25px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Responsive */
+      @media (max-width: 980px) {
+        .featured-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .blog-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: static;
+        }
+
+        .footer-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 760px) {
+        .menu-button {
+          display: block;
+        }
+
+        .nav-links {
+          position: absolute;
+          top: 76px;
+          left: 0;
+          width: 100%;
+          padding: 24px;
+          display: none;
+          flex-direction: column;
+          background: var(--dark);
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .blogs-hero {
+          padding-top: 56px;
+        }
+
+        .hero-search {
+          flex-direction: column;
+        }
+
+        .hero-search button {
+          width: 100%;
+        }
+
+        .featured-grid,
+        .blog-grid,
+        .newsletter-card,
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .newsletter-card {
+          padding: 30px 22px;
+        }
+
+        .section {
+          padding: 70px 0;
+        }
+
+        .category-btn {
+          width: calc(50% - 10px);
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header id="siteHeader">
+      <nav class="container">
+        <a href="index.html" class="logo">Wild<span>Trail</span></a>
+
+        <button class="menu-button" id="menuButton" aria-label="Open navigation menu" aria-expanded="false">
+          ☰
+        </button>
+
+        <ul class="nav-links" id="navLinks">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="blogs.html" class="active">Blogs</a></li>
+          <li><a href="index.html#activities">Activities</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#reviews">Reviews</a></li>
+          <li><a href="index.html#contact">Book Now</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="blogs-hero reveal" id="home">
+        <div class="container hero-inner">
+          <div class="hero-content">
+            <div class="hero-tag">Nepal Journal</div>
+            <h1>Travel Stories <span>&amp;</span> Blogs</h1>
+            <p>
+              Explore mountain trails, cultural festivals, hidden lakes, and unforgettable travel tips
+              from experienced travelers who know Nepal best.
+            </p>
+
+            <form class="hero-search" id="searchForm" aria-label="Search blog posts">
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Search destinations, categories, or keywords"
+                aria-label="Search blog posts"
+              />
+              <button type="submit" aria-label="Submit search">Search</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="section featured-section reveal" id="featured">
+        <div class="container">
+          <div class="section-title">
+            <span>Featured stories</span>
+            <h2>Handpicked Reads</h2>
+            <p>
+              Discover our most loved travel narratives, from sunrise treks to cultural journeys across Nepal.
+            </p>
+          </div>
+
+          <div class="featured-grid" id="featuredGrid"></div>
+        </div>
+      </section>
+
+      <section class="section reveal" id="latest-blogs">
+        <div class="container">
+          <div class="section-title">
+            <span>Latest blogs</span>
+            <h2>Fresh from the mountains</h2>
+            <p>
+              Stay inspired with new ideas for routes, local food, sacred places, and practical travel guidance.
+            </p>
+          </div>
+
+          <div class="blog-layout">
+            <div class="blog-grid" id="blogGrid" aria-label="Latest blog posts"></div>
+
+            <aside class="sidebar" aria-label="Trending destinations">
+              <div class="trending-box">
+                <h3>Trending Destinations</h3>
+
+                <article class="destination-card">
+                  <img src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=300&q=80" alt="Everest Base Camp" loading="lazy" />
+                  <div class="destination-info">
+                    <span>Himalaya</span>
+                    <strong>Everest Base Camp</strong>
+                  </div>
+                </article>
+
+                <article class="destination-card">
+                  <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=80" alt="Pokhara landscape" loading="lazy" />
+                  <div class="destination-info">
+                    <span>Lake City</span>
+                    <strong>Pokhara</strong>
+                  </div>
+                </article>
+
+                <article class="destination-card">
+                  <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=300&q=80" alt="Chitwan jungle" loading="lazy" />
+                  <div class="destination-info">
+                    <span>Wildlife</span>
+                    <strong>Chitwan</strong>
+                  </div>
+                </article>
+
+                <article class="destination-card">
+                  <img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=300&q=80" alt="Lumbini temple area" loading="lazy" />
+                  <div class="destination-info">
+                    <span>Spiritual</span>
+                    <strong>Lumbini</strong>
+                  </div>
+                </article>
+
+                <article class="destination-card">
+                  <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=300&q=80" alt="Mustang valley" loading="lazy" />
+                  <div class="destination-info">
+                    <span>Desert Mountains</span>
+                    <strong>Mustang</strong>
+                  </div>
+                </article>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal" id="categories">
+        <div class="container">
+          <div class="section-title">
+            <span>Explore categories</span>
+            <h2>Choose Your Interest</h2>
+          </div>
+
+          <div class="categories-wrap" id="categoryFilters" aria-label="Filter blog categories"></div>
+        </div>
+      </section>
+
+      <section class="section newsletter reveal" id="newsletter">
+        <div class="container">
+          <div class="newsletter-card">
+            <div>
+              <span class="feature-badge">Newsletter</span>
+              <h2>Get travel inspiration every week</h2>
+              <p>
+                Subscribe to receive exclusive Nepal travel guides, hidden gems, and seasonal tips straight to your inbox.
+              </p>
+            </div>
+
+            <form id="newsletterForm" class="newsletter-form" novalidate>
+              <input id="newsletterEmail" type="email" placeholder="Enter your email address" aria-label="Email address" required />
+              <button type="submit">Subscribe</button>
+              <div id="newsletterMessage" class="newsletter-message" aria-live="polite"></div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">Wild<span>Trail</span></a>
+          <p>
+            Crafting memorable adventures across Nepal with expert guides, responsible tourism, and extraordinary trails.
+          </p>
+          <div class="socials" aria-label="Social media links">
+            <a href="#" aria-label="Facebook">f</a>
+            <a href="#" aria-label="Instagram">ig</a>
+            <a href="#" aria-label="Twitter">X</a>
+            <a href="#" aria-label="YouTube">▶</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="blogs.html">Blogs</a></li>
+            <li><a href="index.html#activities">Activities</a></li>
+            <li><a href="index.html#about">About</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Resources</h4>
+          <ul class="footer-links">
+            <li><a href="#featured">Featured Stories</a></li>
+            <li><a href="#newsletter">Newsletter</a></li>
+            <li><a href="index.html#contact">Plan a Trip</a></li>
+            <li><a href="#latest-blogs">Latest Blogs</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Contact</h4>
+          <ul class="footer-contact">
+            <li>+977 980-1234567</li>
+            <li>hello@wildtrailadventures.com</li>
+            <li>Thamel, Kathmandu, Nepal</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="container footer-bottom">
+        <p>© 2026 WildTrail Adventures. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <button class="scroll-top" id="scrollTopButton" aria-label="Scroll to top">
+      ↑
+    </button>
+
+    <div class="modal-overlay" id="blogModalOverlay" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-image" id="modalImage"></div>
+        <div class="modal-content">
+          <button class="modal-close" id="modalClose" aria-label="Close article details">×</button>
+          <span class="blog-badge" id="modalCategory"></span>
+          <h3 id="modalTitle"></h3>
+          <div class="modal-read-time" id="modalMeta"></div>
+          <p class="modal-desc" id="modalDescription"></p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const blogs = [
+        {
+          title: 'Everest Base Camp Trek: A Sunrise Journey Through the Himalayas',
+          category: 'Trekking',
+          excerpt: 'Step into the heart of the Khumbu region with campsites, prayer flags, and unforgettable views of Everest. Discover the rhythm of high-altitude trekking and the stories shared by local guides.',
+          content: 'The Everest Base Camp trek is more than a mountain route; it is a journey through Sherpa villages, Buddhist monasteries, and unforgettable alpine landscapes. Each day brings a new lesson in resilience, from the first suspension bridges to the final dawn over the Khumbu Icefall. Travelers who complete the trek often describe it as life-changing, with a deeper respect for the mountains and the people who call them home.',
+          author: 'Mina Sherpa',
+          date: 'May 8, 2026',
+          readTime: '8 min read',
+          image: 'https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?auto=format&fit=crop&w=900&q=80',
+          featured: true,
+        },
+        {
+          title: 'Kathmandu Street Food Trail: Momos, Chatamari, and Local Flavors',
+          category: 'Food',
+          excerpt: 'Taste the authentic flavors of Kathmandu with hidden food stalls, morning markets, and dishes that reflect the spirit of Nepal’s capital.',
+          content: 'From steaming momos to crispy chatamari, Kathmandu’s food scene offers a blend of tradition and innovation. This trail leads visitors through courtyards, narrow lanes, and busy markets where local chefs prepare dishes with aromatic spices and fresh ingredients. It is the best way to experience the city beyond its heritage sites and understand its everyday rhythms.',
+          author: 'Asha Thapa',
+          date: 'April 22, 2026',
+          readTime: '6 min read',
+          image: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80',
+          featured: true,
+        },
+        {
+          title: 'Chitwan Jungle Safari: Rhinos, Elephants, and Sunset Canoes',
+          category: 'Wildlife',
+          excerpt: 'Experience the beauty of Nepal’s lowland jungles, where elephants, rhinos, and rare birds create unforgettable safari memories.',
+          content: 'Chitwan National Park offers one of the richest wildlife experiences in South Asia. Early mornings are ideal for spotting rhinos and deer, while the afternoon often reveals crocodiles basking near riverbanks. Sunset canoe rides add a calm, reflective moment to the day, making the trip memorable for families and photographers alike.',
+          author: 'Deepak Bhandari',
+          date: 'March 14, 2026',
+          readTime: '7 min read',
+          image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=900&q=80',
+          featured: true,
+        },
+        {
+          title: 'Bhaktapur Durbar Square During the Festival Season',
+          category: 'Culture',
+          excerpt: 'Celebrate centuries of tradition as wooden courtyards, masked dances, and artisan streets come alive during one of Nepal’s most vibrant festivals.',
+          content: 'Bhaktapur offers a glimpse into medieval Nepal through brick plazas, pagoda temples, and preserved courtyards. During festival season, the square transforms into a celebration of music, masks, and luminous traditions that connect local communities to their heritage. It is an immersive way to understand Nepal’s layered culture beyond the usual tourist circuit.',
+          author: 'Saraswati Tamang',
+          date: 'March 9, 2026',
+          readTime: '5 min read',
+          image: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=900&q=80',
+          featured: false,
+        },
+        {
+          title: 'Poon Hill at Dawn: A Gentle Mountains Escape',
+          category: 'Mountains',
+          excerpt: 'Wake up early for one of Nepal’s most iconic sunrises, with panoramic views of Annapurna and Dhaulagiri beginning to glow.',
+          content: 'Poon Hill is loved for its accessible trail and spectacular sunrise. The route is manageable for beginners yet rich in mountain views, tea houses, and friendly local hospitality. Travelers often pair it with nearby villages to enjoy both route scenery and cultural encounters in the Annapurna region.',
+          author: 'Niraj Gurung',
+          date: 'February 19, 2026',
+          readTime: '4 min read',
+          image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80',
+          featured: false,
+        },
+        {
+          title: 'Pokhara Lakeside Cycling Guide for First-Time Visitors',
+          category: 'Adventure',
+          excerpt: 'Ride along the lakeshore, explore calm villages, and enjoy the mountain air on one of Nepal’s most scenic routes.',
+          content: 'Pokhara Lakeside is ideal for cyclists looking for a balanced mix of scenery and ease. The route follows the lake edge with views of Phewa, small cafes, and friendly local communities. The best times to ride are early morning or late afternoon when the air feels cooler and the peace is at its highest.',
+          author: 'Ramesh Karki',
+          date: 'February 3, 2026',
+          readTime: '5 min read',
+          image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',
+          featured: false,
+        },
+        {
+          title: 'Lumbini Pilgrimage: A Peaceful Visit to the Birthplace of Buddha',
+          category: 'Culture',
+          excerpt: 'Discover the spiritual heart of Nepal with monasteries, gardens, and meditation paths that invite quiet reflection.',
+          content: 'Lumbini is one of the most meaningful places in Nepal for pilgrims and visitors seeking calm. The grounds are filled with international monasteries, prayer gardens, and the sacred Maya Devi temple area. With thoughtful planning, a day here can become a deeply reflective experience that complements a wider Nepal itinerary.',
+          author: 'Bhagwati Lama',
+          date: 'January 27, 2026',
+          readTime: '6 min read',
+          image: 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=900&q=80',
+          featured: false,
+        },
+        {
+          title: 'Mustang in the Off-Season: Why the Desert-Like Valleys Shine',
+          category: 'Mountains',
+          excerpt: 'Explore the dramatic landscapes of Mustang when the crowds thin out and the valleys reveal a quieter, more intimate beauty.',
+          content: 'Upper Mustang feels like a different world, with dry cliffs, cave monasteries, and windswept valleys shaped by long histories of trade and culture. Visiting in the shoulder season lets travelers enjoy comfortable stays and a slower pace while still seeing the region’s striking beauty. It is an excellent choice for photographers and hikers who want space to breathe.',
+          author: 'Tenzin Dolma',
+          date: 'January 15, 2026',
+          readTime: '9 min read',
+          image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',
+          featured: false,
+        },
+        {
+          title: 'Tihar Celebrations: Lights, Flowers, and Family Traditions',
+          category: 'Festivals',
+          excerpt: 'Learn how Nepal celebrates Tihar with oil lamps, marigold garlands, and heartfelt traditions that brighten every household.',
+          content: 'Tihar, often called the festival of lights, is one of the most joyful celebrations in Nepal. Homes are illuminated with oil lamps and colorful rangoli, while families honor animals and bond through festive rituals. Visitors who experience Tihar gain a warm understanding of Nepali hospitality, devotion, and togetherness.',
+          author: 'Puja Rai',
+          date: 'December 22, 2025',
+          readTime: '4 min read',
+          image: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=900&q=80',
+          featured: false,
+        },
+        {
+          title: 'Lake Rara: A Hidden Gem in the Far Western Himalaya',
+          category: 'Lakes',
+          excerpt: 'Find peace at Lake Rara with its clear turquoise water, mountain silence, and a secluded trekking route that feels truly remote.',
+          content: 'Lake Rara is one of Nepal’s most pristine alpine lakes, surrounded by forests and snowy ridges. The trek there is gradually gaining recognition for its serene landscapes and limited crowds. It is a perfect destination for travelers who want a quiet escape and a deeper connection with nature.',
+          author: 'Bimal Joshi',
+          date: 'December 5, 2025',
+          readTime: '5 min read',
+          image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',
+          featured: false,
+        },
+        {
+          title: 'Travel Tips for Monsoon Trekking in Nepal',
+          category: 'Travel Tips',
+          excerpt: 'Prepare for rain, slippery trails, and changing weather with our practical guide to trekking safely during the monsoon season.',
+          content: 'Monsoon trekking requires flexibility, proper rain gear, and a good understanding of trail conditions. Choosing lower-elevation routes, staying updated with local weather, and packing quick-dry clothing can make the difference between a comfortable journey and a difficult one. The rewards include lush landscapes, fewer crowds, and a more intimate experience with the countryside.',
+          author: 'Kiran Bhatta',
+          date: 'November 18, 2025',
+          readTime: '7 min read',
+          image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80',
+          featured: false,
+        },
+      ];
+
+      const categoryFilters = document.getElementById('categoryFilters');
+      const featuredGrid = document.getElementById('featuredGrid');
+      const blogGrid = document.getElementById('blogGrid');
+      const searchInput = document.getElementById('searchInput');
+      const searchForm = document.getElementById('searchForm');
+      const menuButton = document.getElementById('menuButton');
+      const navLinks = document.getElementById('navLinks');
+      const header = document.getElementById('siteHeader');
+      const scrollTopButton = document.getElementById('scrollTopButton');
+      const newsletterForm = document.getElementById('newsletterForm');
+      const newsletterEmail = document.getElementById('newsletterEmail');
+      const newsletterMessage = document.getElementById('newsletterMessage');
+      const modalOverlay = document.getElementById('blogModalOverlay');
+      const modalClose = document.getElementById('modalClose');
+      const modalImage = document.getElementById('modalImage');
+      const modalCategory = document.getElementById('modalCategory');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalMeta = document.getElementById('modalMeta');
+      const modalDescription = document.getElementById('modalDescription');
+
+      let activeCategory = 'All';
+      let searchTerm = '';
+
+      function getFilteredBlogs() {
+        return blogs.filter((blog) => {
+          const matchesCategory = activeCategory === 'All' || blog.category === activeCategory;
+          const haystack = `${blog.title} ${blog.category} ${blog.excerpt} ${blog.content}`.toLowerCase();
+          const matchesSearch = haystack.includes(searchTerm.toLowerCase());
+          return matchesCategory && matchesSearch;
+        });
+      }
+
+      function renderCategories() {
+        const categories = ['All', 'Trekking', 'Adventure', 'Wildlife', 'Culture', 'Food', 'Festivals', 'Mountains', 'Lakes', 'Travel Tips'];
+        categoryFilters.innerHTML = categories
+          .map(
+            (category) =>
+              `<button class="category-btn ${category === activeCategory ? 'active' : ''}" data-category="${category}" aria-pressed="${category === activeCategory}">
+                ${category}
+              </button>`
+          )
+          .join('');
+
+        document.querySelectorAll('.category-btn').forEach((button) => {
+          button.addEventListener('click', () => {
+            activeCategory = button.dataset.category;
+            renderCategories();
+            renderBlogs();
+          });
+        });
+      }
+
+      function renderFeatured() {
+        const featured = blogs.filter((blog) => blog.featured).slice(0, 3);
+
+        featuredGrid.innerHTML = featured
+          .map(
+            (blog) => `
+              <article class="featured-card reveal">
+                <div class="featured-image">
+                  <img src="${blog.image}" alt="${blog.title}" loading="lazy" />
+                </div>
+                <div class="featured-body">
+                  <div class="featured-meta">
+                    <span class="feature-badge">${blog.category}</span>
+                    <span class="featured-date">${blog.date}</span>
+                  </div>
+                  <h3 class="featured-title">${blog.title}</h3>
+                  <p class="featured-excerpt">${blog.excerpt}</p>
+                  <div class="featured-author">
+                    <img class="author-avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80" alt="${blog.author}" loading="lazy" />
+                    <div class="author-info">
+                      <span class="author-name">${blog.author}</span>
+                      <span class="author-role">${blog.readTime}</span>
+                    </div>
+                  </div>
+                  <button class="featured-button" data-blog-id="${blog.title}">Read More</button>
+                </div>
+              </article>
+            `
+          )
+          .join('');
+
+        document.querySelectorAll('.featured-button').forEach((button) => {
+          button.addEventListener('click', () => {
+            const blog = blogs.find((item) => item.title === button.dataset.blogId);
+            if (blog) {
+              openBlogModal(blog);
+            }
+          });
+        });
+      }
+
+      function renderBlogs() {
+        const filteredBlogs = getFilteredBlogs();
+
+        if (filteredBlogs.length === 0) {
+          blogGrid.innerHTML = `
+            <div class="no-results" style="grid-column: 1 / -1; padding: 50px 30px; background: #f8fbfa; border-radius: 18px; text-align: center;">
+              <h3 style="color: var(--dark); margin-bottom: 10px;">No stories found</h3>
+              <p style="color: var(--muted);">Try another keyword or category to explore more Nepal adventures.</p>
+            </div>
+          `;
+          return;
+        }
+
+        blogGrid.innerHTML = filteredBlogs
+          .map(
+            (blog) => `
+              <article class="blog-card reveal" data-category="${blog.category}">
+                <div class="blog-image">
+                  <img src="${blog.image}" alt="${blog.title}" loading="lazy" />
+                </div>
+                <div class="blog-content">
+                  <div class="card-top">
+                    <span class="blog-badge">${blog.category}</span>
+                    <span class="blog-read">${blog.readTime}</span>
+                  </div>
+                  <h3 class="blog-title">${blog.title}</h3>
+                  <p class="blog-description">${blog.excerpt}</p>
+                  <div class="blog-footer">
+                    <span class="blog-date">${blog.date}</span>
+                    <button class="blog-button" data-blog-id="${blog.title}">Read More</button>
+                  </div>
+                </div>
+              </article>
+            `
+          )
+          .join('');
+
+        document.querySelectorAll('.blog-button').forEach((button) => {
+          button.addEventListener('click', () => {
+            const blog = blogs.find((item) => item.title === button.dataset.blogId);
+            if (blog) {
+              openBlogModal(blog);
+            }
+          });
+        });
+      }
+
+      function openBlogModal(blog) {
+        modalImage.innerHTML = `<img src="${blog.image}" alt="${blog.title}" loading="lazy" />`;
+        modalCategory.textContent = blog.category;
+        modalTitle.textContent = blog.title;
+        modalMeta.textContent = `${blog.author} • ${blog.date} • ${blog.readTime}`;
+        modalDescription.textContent = blog.content;
+        modalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeBlogModal() {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      searchForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        searchTerm = searchInput.value.trim();
+        renderBlogs();
+      });
+
+      searchInput.addEventListener('input', () => {
+        if (searchInput.value.trim() === '') {
+          searchTerm = '';
+          renderBlogs();
+        }
+      });
+
+      menuButton.addEventListener('click', () => {
+        const isOpen = navLinks.classList.toggle('active');
+        menuButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      document.querySelectorAll('.nav-links a').forEach((link) => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('active');
+          menuButton.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      window.addEventListener('scroll', () => {
+        const isScrolled = window.scrollY > 40;
+        header.classList.toggle('scrolled', isScrolled);
+        scrollTopButton.classList.toggle('visible', window.scrollY > 500);
+      });
+
+      scrollTopButton.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      modalClose.addEventListener('click', closeBlogModal);
+      modalOverlay.addEventListener('click', (event) => {
+        if (event.target === modalOverlay) {
+          closeBlogModal();
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modalOverlay.classList.contains('active')) {
+          closeBlogModal();
+        }
+      });
+
+      newsletterForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const email = newsletterEmail.value.trim();
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(email)) {
+          newsletterMessage.textContent = 'Please enter a valid email address.';
+          newsletterMessage.className = 'newsletter-message error';
+          newsletterEmail.focus();
+          return;
+        }
+
+        newsletterMessage.textContent = `Thank you! ${email} is subscribed to our Nepal travel updates.`;
+        newsletterMessage.className = 'newsletter-message success';
+        newsletterForm.reset();
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+
+      document.querySelectorAll('.reveal').forEach((element) => {
+        observer.observe(element);
+      });
+
+      renderCategories();
+      renderFeatured();
+      renderBlogs();
+    </script>
+  </body>
+</html>
