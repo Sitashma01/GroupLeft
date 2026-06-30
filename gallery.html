@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Gallery | WildTrail Adventures</title>
+
+  <style>
+    :root {
+      --primary: #1f5f4a;
+      --secondary: #e5a94d;
+      --dark: #17342b;
+      --light: #f4f8f6;
+      --white: #ffffff;
+      --text: #33443e;
+      --muted: #6d7b76;
+      --shadow: 0 14px 35px rgba(21, 56, 44, 0.14);
+      --radius: 18px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--light);
+      line-height: 1.6;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: min(1120px, 90%);
+      margin: auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(15, 47, 38, 0.95);
+      backdrop-filter: blur(12px);
+    }
+
+    nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      color: var(--white);
+      font-size: 1.45rem;
+      font-weight: 800;
+    }
+
+    .logo span {
+      color: var(--secondary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--white);
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--secondary);
+    }
+
+    .menu-button {
+      display: none;
+      border: none;
+      background: transparent;
+      color: var(--white);
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    .hero {
+      min-height: 52vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--white);
+      background:
+        linear-gradient(rgba(9, 38, 29, 0.55), rgba(9, 38, 29, 0.72)),
+        url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=85")
+        center / cover no-repeat;
+    }
+
+    .hero-content {
+      max-width: 760px;
+      padding: 80px 0;
+    }
+
+    .hero span {
+      display: inline-block;
+      margin-bottom: 14px;
+      color: var(--secondary);
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      line-height: 1.05;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: auto;
+      color: #e2ece8;
+      font-size: 1.08rem;
+    }
+
+    .gallery-section {
+      padding: 80px 0 100px;
+    }
+
+    .section-heading {
+      text-align: center;
+      max-width: 650px;
+      margin: 0 auto 45px;
+    }
+
+    .section-heading h2 {
+      color: var(--dark);
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 12px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+    }
+
+    .filter-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .filter-btn {
+      padding: 11px 20px;
+      border: none;
+      border-radius: 50px;
+      background: var(--white);
+      color: var(--dark);
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(21, 56, 44, 0.08);
+      transition: 0.3s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--primary);
+      color: var(--white);
+      transform: translateY(-2px);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      min-height: 280px;
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .gallery-item.large {
+      grid-row: span 2;
+      min-height: 582px;
+    }
+
+    .gallery-item img {
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.08);
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px;
+      color: var(--white);
+      background:
+        linear-gradient(
+          transparent 35%,
+          rgba(7, 31, 24, 0.85)
+        );
+      opacity: 0;
+      transition: 0.35s ease;
+    }
+
+    .gallery-item:hover .overlay {
+      opacity: 1;
+    }
+
+    .overlay h3 {
+      font-size: 1.35rem;
+      margin-bottom: 5px;
+    }
+
+    .overlay p {
+      color: #dce8e3;
+      font-size: 0.95rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 25px;
+      background: rgba(5, 20, 15, 0.92);
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 1000px;
+      max-height: 82vh;
+      width: auto;
+      border-radius: 14px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .close-lightbox {
+      position: absolute;
+      top: 25px;
+      right: 35px;
+      border: none;
+      background: transparent;
+      color: var(--white);
+      font-size: 2.5rem;
+      cursor: pointer;
+    }
+
+    .cta {
+      padding: 85px 0;
+      text-align: center;
+      color: var(--white);
+      background: var(--dark);
+    }
+
+    .cta h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 15px;
+    }
+
+    .cta p {
+      max-width: 620px;
+      margin: 0 auto 26px;
+      color: #c9d8d2;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 26px;
+      border-radius: 50px;
+      color: var(--white);
+      background: var(--secondary);
+      font-weight: 700;
+      transition: 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #cf9138;
+      transform: translateY(-3px);
+    }
+
+    footer {
+      padding: 28px 0;
+      text-align: center;
+      color: #d6e0dc;
+      background: #10271f;
+    }
+
+    @media (max-width: 900px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .gallery-item.large {
+        grid-row: span 1;
+        min-height: 280px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .menu-button {
+        display: block;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: 76px;
+        left: 0;
+        width: 100%;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        padding: 25px;
+        background: var(--dark);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-item,
+      .gallery-item.large {
+        min-height: 300px;
+      }
+
+      .overlay {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <nav class="container">
+      <a href="index.html" class="logo">
+        Wild<span>Trail</span>
+      </a>
+
+      <button class="menu-button" id="menuButton" aria-label="Open navigation">
+        ☰
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#activities">Activities</a></li>
+        <li><a href="gallery.html" class="active">Gallery</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#contact">Book Now</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <div class="container hero-content">
+        <span>Adventure memories</span>
+
+        <h1>Explore Our Gallery</h1>
+
+        <p>
+          Take a look at unforgettable moments from hiking, camping,
+          kayaking, cycling, and outdoor exploration.
+        </p>
+      </div>
+    </section>
+
+    <section class="gallery-section">
+      <div class="container">
+
+        <div class="section-heading">
+          <h2>Outdoor Experiences</h2>
+
+          <p>
+            Browse through our collection and discover the kind of
+            adventure waiting for you.
+          </p>
+        </div>
+
+        <div class="filter-buttons">
+          <button class="filter-btn active" data-filter="all">
+            All
+          </button>
+
+          <button class="filter-btn" data-filter="hiking">
+            Hiking
+          </button>
+
+          <button class="filter-btn" data-filter="camping">
+            Camping
+          </button>
+
+          <button class="filter-btn" data-filter="water">
+            Water
+          </button>
+
+          <button class="filter-btn" data-filter="cycling">
+            Cycling
+          </button>
+        </div>
+
+        <div class="gallery-grid">
+
+          <article class="gallery-item large" data-category="hiking">
+            <img
+              src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1000&q=85"
+              alt="Hikers walking in the mountains"
+            />
+
+            <div class="overlay">
+              <h3>Mountain Trek</h3>
+              <p>Explore scenic trails and high mountain landscapes.</p>
+            </div>
+          </article>
+
+          <article class="gallery-item" data-category="camping">
+            <img
+              src="https://images.unsplash.com/photo-1475483768296-6163e08872a1?auto=format&fit=crop&w=900&q=85"
+              alt="Tent at a mountain campsite"
+            />
+
+            <div class="overlay">
+              <h3>Mountain Camping</h3>
+              <p>Stay close to nature beneath the open sky.</p>
+            </div>
+          </article>
+
+          <article class="gallery-item" data-category="water">
+            <img
+              src="https://images.unsplash.com/photo-1530866495561-507c9faab2ed?auto=format&fit=crop&w=900&q=85"
+              alt="Kayaking on a river"
+            />
+
+            <div class="overlay">
+              <h3>River Kayaking</h3>
+              <p>Enjoy exciting adventures on calm and flowing water.</p>
+            </div>
+          </article>
+
+          <article class="gallery-item" data-category="cycling">
+            <img
+              src="https://images.unsplash.com/photo-1541625602330-2277a4c46182?auto=format&fit=crop&w=900&q=85"
+              alt="Cyclist riding outdoors"
+            />
+
+            <div class="overlay">
+              <h3>Trail Cycling</h3>
+              <p>Ride through forests, hills, and countryside routes.</p>
+            </div>
+          </article>
+
+          <article class="gallery-item" data-category="hiking">
+            <img
+              src="https://images.unsplash.com/photo-1464278533981-50106e6176b1?auto=format&fit=crop&w=900&q=85"
+              alt="Traveller standing near mountain peaks"
+            />
+
+            <div class="overlay">
+              <h3>Summit Views</h3>
+              <p>Reach peaceful viewpoints above the clouds.</p>
+            </div>
+          </article>
+
+          <article class="gallery-item large" data-category="camping">
+            <img
+              src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1000&q=85"
+              alt="Campsite beside a lake"
+            />
+
+            <div class="overlay">
+              <h3>Lakeside Camp</h3>
+              <p>Relax beside the water and enjoy quiet surroundings.</p>
+            </div>
+          </article>
+
+          <article class="gallery-item" data-category="water">
+            <img
+              src="https://images.unsplash.com/photo-1526481280695-3c687fd643ed?auto=format&fit=crop&w=900&q=85"
+              alt="Waterfall in a forest"
+            />
+
+            <div class="overlay">
+              <h3>Waterfall Walk</h3>
+              <p>Discover beautiful waterfalls hidden in nature.</p>
+            </div>
+          </article>
+
+          <article class="gallery-item" data-category="hiking">
+            <img
+              src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=85"
+              alt="Desert mountain trail"
+            />
+
+            <div class="overlay">
+              <h3>Open Trail</h3>
+              <p>Travel through wide landscapes and peaceful routes.</p>
+            </div>
+          </article>
+
+          <article class="gallery-item" data-category="cycling">
+            <img
+              src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=85"
+              alt="Mountain bike on an outdoor trail"
+            />
+
+            <div class="overlay">
+              <h3>Mountain Biking</h3>
+              <p>Experience fast and adventurous off-road trails.</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container">
+        <h2>Create Your Own Adventure Story</h2>
+
+        <p>
+          Choose an outdoor activity, plan your trip, and become part of
+          our next gallery of unforgettable experiences.
+        </p>
+
+        <a href="index.html#contact" class="btn">
+          Book an Adventure
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="lightbox" id="lightbox">
+    <button class="close-lightbox" id="closeLightbox">
+      &times;
+    </button>
+
+    <img id="lightboxImage" src="" alt="Enlarged gallery image" />
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 WildTrail Adventures. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const menuButton = document.getElementById("menuButton");
+    const navLinks = document.getElementById("navLinks");
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const galleryItems = document.querySelectorAll(".gallery-item");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightboxImage");
+    const closeLightbox = document.getElementById("closeLightbox");
+
+    menuButton.addEventListener("click", () => {
+      navLinks.classList.toggle("active");
+    });
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        filterButtons.forEach((btn) => {
+          btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        const selectedCategory = button.dataset.filter;
+
+        galleryItems.forEach((item) => {
+          const itemCategory = item.dataset.category;
+
+          if (
+            selectedCategory === "all" ||
+            selectedCategory === itemCategory
+          ) {
+            item.classList.remove("hidden");
+          } else {
+            item.classList.add("hidden");
+          }
+        });
+      });
+    });
+
+    galleryItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        const selectedImage = item.querySelector("img");
+
+        lightboxImage.src = selectedImage.src;
+        lightboxImage.alt = selectedImage.alt;
+        lightbox.classList.add("active");
+      });
+    });
+
+    closeLightbox.addEventListener("click", () => {
+      lightbox.classList.remove("active");
+    });
+
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) {
+        lightbox.classList.remove("active");
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        lightbox.classList.remove("active");
+      }
+    });
+  </script>
+
+</body>
+</html>
